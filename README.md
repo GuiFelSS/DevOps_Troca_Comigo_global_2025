@@ -10,8 +10,12 @@
 - **Vinicius Leopoldino de Oliveira**: RM557047
 
 ### Deploy
-- [https://troca-comigo-global-2-2025-n89g.onrender.com](https://troca-comigo-global-2-2025-n89g.onrender.com)
+- **Projeto na Azure:** [https://dev.azure.com/RM556834/Troca%20Comigo](https://dev.azure.com/RM556834/Troca%20Comigo)
+- **Render:** [https://troca-comigo-global-2-2025-n89g.onrender.com](https://troca-comigo-global-2-2025-n89g.onrender.com)
 - [video](video)
+- **Deploy na Azure:** [https://webapp-troca-comigo-global.azurewebsites.net/](https://webapp-troca-comigo-global.azurewebsites.net/)
+> [!WARNING]
+> Muito provavelmente que o link de **deploy na Azure não ira funcionar apos a gravação do video** deviado a consumo total dos creditos na plataforma
 
 Backend completo de uma plataforma de troca de habilidades (skill-swap), desenvolvida para a Global Solution - FIAP 2025. O projeto permite que usuários se cadastrem, 
 ofereçam suas habilidades em troca de "créditos de tempo" e usem esses créditos para aprender novas habilidades com outros membros da comunidade.
@@ -101,10 +105,12 @@ mvn spring-boot:run
 - ```GET /api/users/me``` - Retorna o perfil completo do usuário autenticado.
 - ```PUT /api/users/me``` - Atualiza o perfil do usuário autenticado.
 - ```GET /api/users/{id}``` - Retorna o perfil público de um usuário específico.
+- ```DELETE /api/users/me``` - Deleta a conta.
 
 **Habilidades (Habilidades) - 🔒 Protegido**
 - ```POST /api/habilidades``` - Cria uma nova habilidade para o usuário logado.
 - ```GET /api/habilidades/me``` - Lista as habilidades do usuário logado.
+- ```PUT /api/habilidades/{id}``` - Atualiza habilidade.
 - ```DELETE /api/habilidades/{id}``` - Deleta uma habilidade do usuário logado.
 
 **Sessões (Sessoes) - 🔒 Protegido**
@@ -129,7 +135,7 @@ Para validar o funcionamento da API, recomenda-se o uso do **Postman** ou **Inso
 
 **URL Base (Produção):** `https://troca-comigo-global-2-2025-n89g.onrender.com`
 
-### 1. Autenticação
+### 1. Autenticação e Perfil/Usuario
 
 **1.1 Registrar Usuário (Mentor)**
 * **Método:** `POST`
@@ -157,15 +163,35 @@ Para validar o funcionamento da API, recomenda-se o uso do **Postman** ou **Inso
 * **Status Esperado:** `200 OK`
 * **⚠️ Importante:** Copie o `token` retornado. Você precisará dele no cabeçalho Authorization (Bearer Token) para todas as requisições abaixo.
 
-### 2. Perfil e Habilidades
-
-**2.1 Ver Meu Perfil**
+**1.3 Ler Perfil**
 * **Método:** `GET`
 * **URL:** `/api/users/me`
 * **Auth:** Bearer Token
 * **Status Esperado:** `200 OK`
 
-**2.2 Criar uma Habilidade**
+**1.4 Atualizar Perfil**
+* **Método:** `PUT`
+* **URL:** `/api/users/me`
+* **Auth:** Bearer Token
+* **Body (JSON):**
+  ```json
+  {
+    "fullName": "Usuario CRUD Atualizado",
+    "bio": "Testando update na nuvem",
+    "linkedinUrl": "https://linkedin.com/in/teste"
+  }
+  ```
+* **Status Esperado:** `200 OK`
+
+**1.5 Deletar Perfil**
+* **Método:** `DEL`
+* **URL:** `/api/users/me`
+* **Auth:** Bearer Token
+* **Status Esperado:** `204 OK`
+
+### 2. Habilidades
+
+**2.1 Criar Habilidades**
 * **Método:** `POST`
 * **URL:** `/api/habilidades`
 * **Auth:** Bearer Token
@@ -182,6 +208,36 @@ Para validar o funcionamento da API, recomenda-se o uso do **Postman** ou **Inso
   }
   ```
 * **Status Esperado:** `201 Created` (Copie o `id` da habilidade criada)
+
+**2.2 Ler Habilidades**
+* **Método:** `GET`
+* **URL:** `/api/habilidades/me`
+* **Auth:** Bearer Token
+* **Status Esperado:** `200 Created`
+
+**2.3 Atualizar Habilidades**
+* **Método:** `PUT`
+* **URL:** `/api/habilidades/{ID da Habilidade}`
+* **Auth:** Bearer Token
+* **Body (JSON):**
+  ```json
+  {
+  "name": "Java Avançado",
+  "category": "TECNOLOGIA",
+  "description": "Curso completo de Java e Cloud",
+  "level": "AVANCADO",
+  "isOffering": true,
+  "isSeeking": false,
+  "hourlyRate": 50.0
+  }
+  ```
+* **Status Esperado:** `200 Created`
+
+**2.4 Deletar Habilidades**
+* **Método:** `DEL`
+* **URL:** `/api/habilidades/{ID da Habilidade}`
+* **Auth:** Bearer Token
+* **Status Esperado:** `204 Created`
 
 ### 3. Sessões de Mentoria
 
@@ -240,3 +296,65 @@ Para validar o funcionamento da API, recomenda-se o uso do **Postman** ou **Inso
   }
   ```
 * **Status Esperado:** `200 OK` (Retorna um texto gerado pela IA)
+
+## Estrutura do projeto
+```
+Troca_Comigo-main/
+├── scripts/
+│   └── script-bd.sql
+├── src/
+│   ├── main/
+│   │   ├── java/br/com/fiap/globalSolution/
+│   │   │   ├── Controller/         # Endpoints da API (REST)
+│   │   │   │   ├── SecurityController/
+│   │   │   │   │   └── AuthController.java
+│   │   │   │   ├── AvaliacaoController.java
+│   │   │   │   ├── HabilidadeContorller.java
+│   │   │   │   ├── IaController.java
+│   │   │   │   ├── SessoesController.java
+│   │   │   │   ├── TransferenciasController.java
+│   │   │   │   └── UsuarioController.java
+│   │   │   ├── Dto/                # Objetos de Transferência de Dados
+│   │   │   ├── Entity/             # Entidades JPA (Mapeamento do Banco)
+│   │   │   │   ├── UsuarioEntity.java
+│   │   │   │   ├── HabilidadeEntity.java
+│   │   │   │   └── ...
+│   │   │   ├── Enum/               # Enums (Role, Status, Categoria)
+│   │   │   ├── Rabbit/             # Módulo de Mensageria
+│   │   │   │   ├── Config/
+│   │   │   │   ├── Consumers/      # Consumidor de E-mails
+│   │   │   │   ├── Dto/
+│   │   │   │   ├── Entity/
+│   │   │   │   └── Service/
+│   │   │   ├── Repository/         # Interfaces de acesso a dados
+│   │   │   ├── Security/           # Configurações de Segurança e JWT
+│   │   │   │   ├── JwtAuthFilter.java
+│   │   │   │   ├── SecurityConfig.java
+│   │   │   │   └── ...
+│   │   │   ├── Service/            # Regras de Negócio
+│   │   │   │   ├── AuthService.java
+│   │   │   │   ├── IaService.java  # Integração com IA Generativa
+│   │   │   │   └── ...
+│   │   │   └── GlobalSolutionApplication.java
+│   │   └── resources/
+│   │       ├── templates/
+│   │       │   └── index.html      # Página inicial simples
+│   │       ├── application.properties  # Configurações (Azure, Rabbit, JWT, IA)
+│   │       └── messages_pt_BR.properties # Mensagens do sistema (Unicode)
+│   └── test/                       # Testes Unitários e de Integração
+│       ├── java/br/com/fiap/globalSolution/
+│       │   ├── Security/
+│       │   │   └── AuthServiceTest.java
+│       │   ├── Service/
+│       │   │   ├── AvaliacaoServiceTest.java
+│       │   │   └── SessoesServiceTest.java
+│       │   └── GlobalSolutionApplicationTests.java
+│       └── resources/
+│           └── application-test.properties # <== CONFIGURAÇÃO DE TESTES (H2 e Mocks)
+├── docker-compose.yml              # Orquestração local (RabbitMQ)
+├── Dockerfile                      # Build da Imagem para Deploy (Render/Azure)
+├── pom.xml                         # Gerenciamento de Dependências (Maven)
+└── README.md                       # Documentação do Projeto
+```
+
+![Banner](imag/banner_troca_comigo.png)
