@@ -356,5 +356,6 @@ Troca_Comigo-main/
 ├── pom.xml                         # Gerenciamento de Dependências (Maven)
 └── README.md                       # Documentação do Projeto
 ```
+## Diagrama de arquitetura do projeto
 
-![Banner](imag/banner_troca_comigo.png)
+![Banner](imag/diagrama_global.png)
