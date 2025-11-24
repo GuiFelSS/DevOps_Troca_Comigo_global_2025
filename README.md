@@ -12,7 +12,7 @@
 ### Deploy
 - **Projeto na Azure:** [https://dev.azure.com/RM556834/Troca%20Comigo](https://dev.azure.com/RM556834/Troca%20Comigo)
 - **Render:** [https://troca-comigo-global-2-2025-n89g.onrender.com](https://troca-comigo-global-2-2025-n89g.onrender.com)
-- [video](video)
+- **Video:** [https://www.youtube.com/watch?v=PQ_NMhAXyAs](https://www.youtube.com/watch?v=PQ_NMhAXyAs)
 - **Deploy na Azure:** [https://webapp-troca-comigo-global.azurewebsites.net/](https://webapp-troca-comigo-global.azurewebsites.net/)
 > [!WARNING]
 > Muito provavelmente que o link de **deploy na Azure não ira funcionar apos a gravação do video** deviado a consumo total dos creditos na plataforma
